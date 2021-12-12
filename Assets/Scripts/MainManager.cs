@@ -7,7 +7,7 @@ using System.Linq;
 public class MainManager : MonoBehaviour
 {
     [Header("Player Info")]
-    public Image playerIcon;
+    public SpriteRenderer playerIcon;
     public Text playerLevel;
     public Text playerName;
     public Text playerRank;
