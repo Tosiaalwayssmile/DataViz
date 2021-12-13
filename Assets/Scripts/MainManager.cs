@@ -34,17 +34,23 @@ public class MainManager : MonoBehaviour
     [Header("WinRate Pie Chart")]
     public Image wrImg;
 
+    [Header("Match History")]
+    public GameObject viewport;
+    public GameObject matchLabelPrefab;
+
 
     SummonerDTO player;
     LeagueEntryDTO playerEntry;
     ChampionDTO[] champions;
     MatchInfo[] matchInfos;
+    Dictionary<long, Sprite> champSprites;
 
     // Start is called before the first frame update
     void Start()
     {
         RiotApi.SetApiKey("RGAPI-0467abfa-db51-40e9-a467-65c443481d9a");
         RiotApi.SetRegion("Europe North East");
+
 
         LoadPlayer();
         LoadChampions();
@@ -68,6 +74,7 @@ public class MainManager : MonoBehaviour
     void LoadChampions()
     {
         champions = RiotApi.GetChampsInfo();
+        champSprites = RiotApi.DownloadChampionSprites(champions);
     }
     void LoadMatchHistory()
     {
@@ -81,6 +88,8 @@ public class MainManager : MonoBehaviour
         int utilAmount = 0;
 
         int won = 0;
+
+        var champGamesAmount = new Dictionary<int, int>();
 
         foreach (var info in matchInfos)
         {
@@ -124,10 +133,32 @@ public class MainManager : MonoBehaviour
                 supportSlider.value++;
             else
                 print("Unknown role: " + role);
+
+
+            if (champGamesAmount.ContainsKey(info.championId))
+                champGamesAmount[info.championId]++;
+            else
+                champGamesAmount.Add(info.championId, 1);
         }
 
-        int top1 = topAmount;
-        int top2 = topAmount;
+        foreach (var info in matchInfos)
+        {
+            var label = Instantiate(matchLabelPrefab).GetComponent<MatchLabel>();
+            label.Init(champSprites[info.championId], info.win, info.gameMode, )
+        }
+
+        int top1 = -1;
+        int top2 = -1;
+
+        if (topAmount > top1)
+        {
+            top2 = top1;
+            top1 = topAmount;
+        }
+        else if (topAmount > top2)
+        {
+            top2 = topAmount;
+        }
 
         if (jglAmount > top1)
         {
@@ -186,15 +217,15 @@ public class MainManager : MonoBehaviour
         else
             supImg.enabled = true;
 
-        if (top2 == topAmount && top1 != topAmount)
+        if (top2 == topAmount && topAmount != 0 && !topImg.enabled)
             topImg.enabled = true;
-        else if (top2 == jglAmount && top1 != jglAmount)
+        else if (top2 == jglAmount && jglAmount != 0 && !jglImg.enabled)
             jglImg.enabled = true;
-        else if (top2 == midAmount && top1 != midAmount)
+        else if (top2 == midAmount && midAmount != 0 && !midImg.enabled)
             midImg.enabled = true;
-        else if (top2 == botAmount && top1 != botAmount)
+        else if (top2 == botAmount && botAmount != 0 && !botImg.enabled)
             botImg.enabled = true;
-        else if (top2 == utilAmount && top1 != utilAmount)
+        else if (top2 == utilAmount && utilAmount != 0 && !supImg.enabled)
             supImg.enabled = true;
 
         wrImg.fillAmount = (float)won / matchAmount;

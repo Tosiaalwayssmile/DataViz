@@ -261,6 +261,7 @@ public static class RiotApi
             matchInfo.win = player.win;
             matchInfo.individualPosition = player.individualPosition;
             matchInfo.role = player.role;
+            matchInfo.gameMode = match.info.gameMode;
 
             matches[i] = matchInfo;
         }

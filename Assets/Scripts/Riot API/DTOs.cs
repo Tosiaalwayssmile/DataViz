@@ -43,6 +43,7 @@ public class InfoDto : DTO
 {
     public long gameCreation { get; set; }
     public long gameDuration { get; set; }
+    public string gameMode { get; set; }
     public ParticipantDTO[] participants { get; set; }
 }
 
@@ -58,6 +59,8 @@ public class ParticipantDTO : DTO
     public bool win { get; set; }
     public string individualPosition { get; set; }
     public string role { get; set; }
+    public int summoner1Id { get; set; }
+    public int summoner2Id { get; set; }
 }
 
 public class MatchInfo
@@ -70,6 +73,7 @@ public class MatchInfo
     public int kills { get; set; }
     public int championId { get; set; }
     public int totalMinionsKilled { get; set; }
+    public string gameMode { get; set; }
     public bool win { get; set; }
     public string individualPosition { get; set; }
     public string role { get; set; }
