@@ -35,7 +35,7 @@ public class MainManager : MonoBehaviour
     public Image wrImg;
 
     [Header("Match History")]
-    public GameObject viewport;
+    public Transform viewport;
     public GameObject matchLabelPrefab;
 
 
@@ -144,7 +144,16 @@ public class MainManager : MonoBehaviour
         foreach (var info in matchInfos)
         {
             var label = Instantiate(matchLabelPrefab).GetComponent<MatchLabel>();
-            label.Init(champSprites[info.championId], info.win, info.gameMode, )
+
+            label.transform.SetParent(viewport);
+            label.transform.localScale = Vector3.one;
+            label.transform.localPosition = Vector3.zero;
+
+            label.SetChampPortrait(champSprites[info.championId], champGamesAmount[info.championId] / 10f);
+            label.WinLoseGamemode(info.win, info.gameMode);
+            label.SetSummonerSpells(info.summoner1Id, info.summoner2Id);
+            label.SetKDA((float)info.kills / info.teamKills, (float)info.deaths / info.teamDeaths, (float)info.assists / info.teamKills);
+            label.SetGameTime(info.gameCreation, info.gameDuration);
         }
 
         int top1 = -1;
@@ -228,6 +237,10 @@ public class MainManager : MonoBehaviour
         else if (top2 == utilAmount && utilAmount != 0 && !supImg.enabled)
             supImg.enabled = true;
 
-        wrImg.fillAmount = (float)won / matchAmount;
+        float winrate = (float)won / matchAmount;
+        winrate += 0.1f;
+        if (winrate < 0.5f)
+            winrate = 1 - winrate;
+        wrImg.fillAmount = winrate;
     }
 }

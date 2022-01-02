@@ -77,4 +77,8 @@ public class MatchInfo
     public bool win { get; set; }
     public string individualPosition { get; set; }
     public string role { get; set; }
+    public int summoner1Id { get; set; }
+    public int summoner2Id { get; set; }
+    public int teamKills { get; set; }
+    public int teamDeaths { get; set; }
 }

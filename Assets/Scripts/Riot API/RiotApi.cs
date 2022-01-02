@@ -8,12 +8,32 @@ using System.Net.Http;
 using System.Text;
 using UnityEngine;
 
-public static class RiotApi
+public class RiotApi : MonoBehaviour
 {
+    public Sprite barrier;
+    public Sprite clarity;
+    public Sprite cleanse;
+    public Sprite exhaust;
+    public Sprite flash;
+    public Sprite ghost;
+    public Sprite heal;
+    public Sprite ignite;
+    public Sprite mark;
+    public Sprite smite;
+    public Sprite teleport;
+    public Sprite unknown;
+
     static string apiKey;
     static string region;
     static string playerId;
     static string puuid;
+    static Dictionary<int, Sprite> summonerSpellsSprites;
+    static RiotApi @this;
+
+    public void Start()
+    {
+        @this = this;
+    }
 
     static HttpResponseMessage GET(string URL)
     {
@@ -190,8 +210,12 @@ public static class RiotApi
         foreach (var champ in dtos)
         {
             string fileName = directory + champ.id + ".jpg";
-            string url = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-tiles/" + champ.id + "/" + champ.id + "000.jpg";
-            client.DownloadFile(new Uri(url), fileName);
+
+            if (!File.Exists(fileName))
+            {
+                string url = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-tiles/" + champ.id + "/" + champ.id + "000.jpg";
+                client.DownloadFile(new Uri(url), fileName);
+            }
             dict.Add(champ.id, SpriteFromImg(fileName, 400f));
         }
 
@@ -209,6 +233,38 @@ public static class RiotApi
         WebClient client = new WebClient();
         client.DownloadFile(new Uri(url), fileName);
         return SpriteFromImg(fileName, 100f);
+    }
+    static public Sprite SummonerSpellSpriteFromID(int id)
+    {
+        switch (id)
+        {
+            case 21:
+                return @this.barrier;
+            case 13:
+                return @this.clarity;
+            case 1:
+                return @this.cleanse;
+            case 3:
+                return @this.exhaust;
+            case 4:
+                return @this.flash;
+            case 6:
+                return @this.ghost;
+            case 7:
+                return @this.heal;
+            case 14:
+                return @this.ignite;
+            case 32:
+                return @this.mark;
+            case 39:
+                return @this.mark;
+            case 11:
+                return @this.smite;
+            case 12:
+                return @this.teleport;
+            default:
+                return @this.unknown;
+        }
     }
     static public LeagueEntryDTO GetEntries(string encryptedSummonerId)
     {
@@ -241,6 +297,7 @@ public static class RiotApi
             uri = GetRegionURI(uri);
             MatchDTO match = GetDTOFromJson<MatchDTO>(uri);
             MatchInfo matchInfo = new MatchInfo();
+
             ParticipantDTO player = null;
             foreach (var p in from p in match.info.participants
                               where p.puuid.Equals(puuid)
@@ -248,6 +305,16 @@ public static class RiotApi
             {
                 player = p;
                 break;
+            }
+
+            int totalKills = 0;
+            int totalDeaths = 0;
+            foreach (var part in from part in match.info.participants
+                                 where part.win == player.win
+                                 select part)
+            {
+                totalKills += part.kills;
+                totalDeaths += part.deaths;
             }
 
             matchInfo.assists = player.assists;
@@ -262,6 +329,10 @@ public static class RiotApi
             matchInfo.individualPosition = player.individualPosition;
             matchInfo.role = player.role;
             matchInfo.gameMode = match.info.gameMode;
+            matchInfo.summoner1Id = player.summoner1Id;
+            matchInfo.summoner2Id = player.summoner2Id;
+            matchInfo.teamKills = totalKills;
+            matchInfo.teamDeaths = totalDeaths;
 
             matches[i] = matchInfo;
         }
