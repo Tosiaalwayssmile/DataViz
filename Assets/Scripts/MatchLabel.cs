@@ -18,6 +18,9 @@ public class MatchLabel : MonoBehaviour
     public Transform deathsBar;
     public Text gameDuration;
     public Text gameCreation;
+    public Text killsCount;
+    public Text deathsCount;
+    public Text assistsCount;
 
 
 
@@ -28,7 +31,7 @@ public class MatchLabel : MonoBehaviour
     }
     public void WinLoseGamemode(bool win, string gameMode)
     {
-        winLoseLabel.text = win ? "WYGRANA" : "PRZEGRANA";
+        winLoseLabel.text = win ? "VICTORY" : "DEFEAT";
         gameModeLabel.text = gameMode;
     }
     public void SetSummonerSpells(int spell1Id, int spell2Id)
@@ -36,8 +39,12 @@ public class MatchLabel : MonoBehaviour
         spell1Icon.sprite = RiotApi.SummonerSpellSpriteFromID(spell1Id);
         spell2Icon.sprite = RiotApi.SummonerSpellSpriteFromID(spell2Id);
     }
-    public void SetKDA(float killRatio, float deathRatio, float assistRatio)
+    public void SetKDA(float killRatio, float deathRatio, float assistRatio, int kill, int deaths, int assists)
     {
+        killsCount.text = kill.ToString();
+        deathsCount.text = deaths.ToString();
+        assistsCount.text = assists.ToString();
+
         float kaRatio = Mathf.Sqrt(killRatio + assistRatio);
         killRatio = Mathf.Sqrt(killRatio);
         deathRatio = Mathf.Sqrt(deathRatio);

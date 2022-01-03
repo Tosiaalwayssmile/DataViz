@@ -152,7 +152,7 @@ public class MainManager : MonoBehaviour
             label.SetChampPortrait(champSprites[info.championId], champGamesAmount[info.championId] / 10f);
             label.WinLoseGamemode(info.win, info.gameMode);
             label.SetSummonerSpells(info.summoner1Id, info.summoner2Id);
-            label.SetKDA((float)info.kills / info.teamKills, (float)info.deaths / info.teamDeaths, (float)info.assists / info.teamKills);
+            label.SetKDA((float)info.kills / info.teamKills, (float)info.deaths / info.teamDeaths, (float)info.assists / info.teamKills, info.kills, info.deaths, info.assists);
             label.SetGameTime(info.gameCreation, info.gameDuration);
         }
 
