@@ -32,6 +32,7 @@ public class MatchLabel : MonoBehaviour
     public void WinLoseGamemode(bool win, string gameMode)
     {
         winLoseLabel.text = win ? "VICTORY" : "DEFEAT";
+        winLoseLabel.color = win ? new Color(0.1568628f, 0.5843138f, 0.7372549f) : new Color(0.9716981f, 0.04531838f, 0.03208439f);
         gameModeLabel.text = gameMode;
     }
     public void SetSummonerSpells(int spell1Id, int spell2Id)
