@@ -22,6 +22,8 @@ public class MatchLabel : MonoBehaviour
     public Text deathsCount;
     public Text assistsCount;
 
+    Map.mapMethod onEnter;
+    Map.mapMethod onExit;
 
 
     public void SetChampPortrait(Sprite champ, float proficiency)
@@ -66,5 +68,27 @@ public class MatchLabel : MonoBehaviour
         DateTime creation = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         creation = creation.AddMilliseconds(creationTime).ToLocalTime();
         gameCreation.text = creation.Day.ToString() + "." + creation.Month.ToString() + "." + (creation.Year % 1000).ToString() + " " + creation.Hour.ToString() + ":" + creation.Minute.ToString();
+    }
+    public void SetPosition(string pos)
+    {
+        if (pos.Equals("TOP"))
+            onEnter += Map.SetTop;
+        else if (pos.Equals("JUNGLE"))
+            onEnter += Map.SetJgl;
+        else if (pos.Equals("MIDDLE"))
+            onEnter += Map.SetMid;
+        else if (pos.Equals("BOTTOM") || pos.Equals("UTILITY"))
+            onEnter += Map.SetBot;
+        onExit += Map.SetDef;
+    }
+
+    public void OnMouseEnter()
+    {
+        onEnter?.Invoke();
+    }
+
+    public void OnMouseExit()
+    {
+        onExit?.Invoke();
     }
 }

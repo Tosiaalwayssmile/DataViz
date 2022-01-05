@@ -154,6 +154,7 @@ public class MainManager : MonoBehaviour
             label.SetSummonerSpells(info.summoner1Id, info.summoner2Id);
             label.SetKDA((float)info.kills / info.teamKills, (float)info.deaths / info.teamDeaths, (float)info.assists / info.teamKills, info.kills, info.deaths, info.assists);
             label.SetGameTime(info.gameCreation, info.gameDuration);
+            label.SetPosition(info.individualPosition);
         }
 
         int top1 = -1;
