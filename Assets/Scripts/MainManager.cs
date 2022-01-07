@@ -266,6 +266,6 @@ public class MainManager : MonoBehaviour
         winrate += 0.1f;
         if (winrate < 0.5f)
             winrate = 1 - winrate;
-        wrImg.fillAmount = winrate;
+        wrImg.fillAmount = (float)won / matchAmount;
     }
 }
