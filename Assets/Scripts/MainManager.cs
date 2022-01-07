@@ -68,7 +68,7 @@ public class MainManager : MonoBehaviour
         playerIcon.sprite = RiotApi.DownloadIconSprite(player.profileIconId);
         playerName.text = ign;
         playerLevel.text = player.summonerLevel.ToString();
-        playerRank.text = playerEntry.tier + " " + playerEntry.rank;
+        playerRank.text = playerEntry == null ? "UNRANKED" : playerEntry.tier + " " + playerEntry.rank;
         playerMaestry.text = RiotApi.GetMaestryScore(player.id).ToString();
     }
     void LoadChampions()
@@ -78,7 +78,7 @@ public class MainManager : MonoBehaviour
     }
     void LoadMatchHistory()
     {
-        int matchAmount = 10;
+        int matchAmount = 5;
         matchInfos = RiotApi.GetMatches(matchAmount);
 
         int topAmount = 0;
@@ -210,33 +210,57 @@ public class MainManager : MonoBehaviour
             top2 = utilAmount;
         }
 
-        topImg.enabled = false;
-        jglImg.enabled = false;
-        midImg.enabled = false;
-        botImg.enabled = false;
-        supImg.enabled = false;
+        topImg.transform.localScale = Vector3.one;
+        jglImg.transform.localScale = Vector3.one;
+        midImg.transform.localScale = Vector3.one;
+        botImg.transform.localScale = Vector3.one;
+        supImg.transform.localScale = Vector3.one;
+
+        Vector3 bigImgScale = Vector3.one * 1.5f;
+
+        bool topBig = false;
+        bool jglBig = false;
+        bool midBig = false;
+        bool botBig = false;
+        bool suppBig = false;
+
 
         if (top1 == topAmount)
-            topImg.enabled = true;
+        {
+            topImg.transform.localScale = bigImgScale;
+            topBig = true;
+        }
         else if (top1 == jglAmount)
-            jglImg.enabled = true;
+        {
+            jglImg.transform.localScale = bigImgScale;
+            jglBig = true;
+        }
         else if (top1 == midAmount)
-            midImg.enabled = true;
+        {
+            midImg.transform.localScale = bigImgScale;
+            midBig = true;
+        }
         else if (top1 == botAmount)
-            botImg.enabled = true;
+        {
+            botImg.transform.localScale = bigImgScale;
+            botBig = true;
+        }
         else
-            supImg.enabled = true;
+        {
+            supImg.transform.localScale = bigImgScale;
+            suppBig = true;
+        }
 
-        if (top2 == topAmount && topAmount != 0 && !topImg.enabled)
-            topImg.enabled = true;
-        else if (top2 == jglAmount && jglAmount != 0 && !jglImg.enabled)
-            jglImg.enabled = true;
-        else if (top2 == midAmount && midAmount != 0 && !midImg.enabled)
-            midImg.enabled = true;
-        else if (top2 == botAmount && botAmount != 0 && !botImg.enabled)
-            botImg.enabled = true;
-        else if (top2 == utilAmount && utilAmount != 0 && !supImg.enabled)
-            supImg.enabled = true;
+        if (top2 == topAmount && topAmount != 0 && !topBig)
+            topImg.transform.localScale = bigImgScale;
+        else if (top2 == jglAmount && jglAmount != 0 && !jglBig)
+            jglImg.transform.localScale = bigImgScale;
+        else if (top2 == midAmount && midAmount != 0 && !midBig)
+            midImg.transform.localScale = bigImgScale;
+        else if (top2 == botAmount && botAmount != 0 && !botBig)
+            botImg.transform.localScale = bigImgScale;
+        else if (top2 == utilAmount && utilAmount != 0 && !suppBig)
+            supImg.transform.localScale = bigImgScale;
 
         float winrate = (float)won / matchAmount;
         winrate += 0.1f;
