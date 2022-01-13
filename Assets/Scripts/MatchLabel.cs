@@ -14,7 +14,6 @@ public class MatchLabel : MonoBehaviour
     public Image spell2Icon;
     public Transform killsBar;
     public Transform assistsBar;
-    public Transform killsAssistsSeparator;
     public Transform deathsBar;
     public Text gameDuration;
     public Text gameCreation;
@@ -69,7 +68,6 @@ public class MatchLabel : MonoBehaviour
         killsBar.localScale = new Vector3(killRatio, killRatio, 1);
         deathsBar.localScale = new Vector3(deathRatio, deathRatio, 1);
         assistsBar.localScale = new Vector3(kaRatio, kaRatio, 1);
-        killsAssistsSeparator.localScale = new Vector3(killRatio + 0.02f, killRatio + 0.02f, 1);
     }
     public void SetGameTime(long creationTime, long duration)
     {
