@@ -52,6 +52,19 @@ public class MatchLabel : MonoBehaviour
         killRatio = Mathf.Sqrt(killRatio);
         deathRatio = Mathf.Sqrt(deathRatio);
 
+        killRatio *= 0.7f;
+        killRatio += 0.3f;
+
+        deathRatio *= 0.7f;
+        deathRatio += 0.3f;
+
+        kaRatio *= 0.7f;
+        kaRatio += 0.3f;
+
+        killRatio *= 0.78f;
+        deathRatio *= 0.78f;
+        kaRatio *= 0.78f;
+
 
         killsBar.localScale = new Vector3(killRatio, killRatio, 1);
         deathsBar.localScale = new Vector3(deathRatio, deathRatio, 1);

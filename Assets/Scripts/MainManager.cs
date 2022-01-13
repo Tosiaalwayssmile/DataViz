@@ -149,7 +149,7 @@ public class MainManager : MonoBehaviour
             label.transform.localScale = Vector3.one;
             label.transform.localPosition = Vector3.zero;
 
-            label.SetChampPortrait(champSprites[info.championId], champGamesAmount[info.championId] / 10f);
+            label.SetChampPortrait(champSprites[info.championId], (float)champGamesAmount[info.championId] / matchInfos.Length);
             label.WinLoseGamemode(info.win, info.gameMode);
             label.SetSummonerSpells(info.summoner1Id, info.summoner2Id);
             label.SetKDA((float)info.kills / info.teamKills, (float)info.deaths / info.teamDeaths, (float)info.assists / info.teamKills, info.kills, info.deaths, info.assists);
