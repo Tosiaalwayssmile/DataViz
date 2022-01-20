@@ -234,35 +234,48 @@ public class RiotApi : MonoBehaviour
         client.DownloadFile(new Uri(url), fileName);
         return SpriteFromImg(fileName, 100f);
     }
-    static public Sprite SummonerSpellSpriteFromID(int id)
+    static public Sprite SummonerSpellSpriteFromID(int id, out string spellName)
     {
         switch (id)
         {
             case 21:
+                spellName = "Barrier";
                 return @this.barrier;
             case 13:
+                spellName = "Clarity"; 
                 return @this.clarity;
             case 1:
+                spellName = "Cleanse"; 
                 return @this.cleanse;
             case 3:
+                spellName = "Exhaust"; 
                 return @this.exhaust;
             case 4:
+                spellName = "Flash"; 
                 return @this.flash;
             case 6:
+                spellName = "Ghost"; 
                 return @this.ghost;
             case 7:
+                spellName = "Heal"; 
                 return @this.heal;
             case 14:
+                spellName = "Ignite"; 
                 return @this.ignite;
             case 32:
+                spellName = "Mark"; 
                 return @this.mark;
             case 39:
+                spellName = "Mark"; 
                 return @this.mark;
             case 11:
+                spellName = "Smite"; 
                 return @this.smite;
             case 12:
+                spellName = "Teleport"; 
                 return @this.teleport;
             default:
+                spellName = "Unkown"; 
                 return @this.unknown;
         }
     }

@@ -20,15 +20,16 @@ public class MatchLabel : MonoBehaviour
     public Text killsCount;
     public Text deathsCount;
     public Text assistsCount;
+    public Text kpHover;
 
     Map.mapMethod onEnter;
     Map.mapMethod onExit;
 
 
-    public void SetChampPortrait(Sprite champ, float proficiency)
+    public void SetChampPortrait(Sprite champ, int maestryLevel)
     {
         champIcon.sprite = champ;
-        proficiencyBar.fillAmount = proficiency;
+        proficiencyBar.fillAmount = maestryLevel / 7f;
     }
     public void WinLoseGamemode(bool win, string gameMode)
     {
@@ -38,8 +39,11 @@ public class MatchLabel : MonoBehaviour
     }
     public void SetSummonerSpells(int spell1Id, int spell2Id)
     {
-        spell1Icon.sprite = RiotApi.SummonerSpellSpriteFromID(spell1Id);
-        spell2Icon.sprite = RiotApi.SummonerSpellSpriteFromID(spell2Id);
+        spell1Icon.sprite = RiotApi.SummonerSpellSpriteFromID(spell1Id, out string name1);
+        spell2Icon.sprite = RiotApi.SummonerSpellSpriteFromID(spell2Id, out string name2);
+
+        spell1Icon.GetComponentInChildren<RoleHoverer>().image.GetComponentInChildren<Text>().text = name1;
+        spell2Icon.GetComponentInChildren<RoleHoverer>().image.GetComponentInChildren<Text>().text = name2;
     }
     public void SetKDA(float killRatio, float deathRatio, float assistRatio, int kill, int deaths, int assists)
     {
@@ -50,6 +54,9 @@ public class MatchLabel : MonoBehaviour
         float kaRatio = Mathf.Sqrt(killRatio + assistRatio);
         killRatio = Mathf.Sqrt(killRatio);
         deathRatio = Mathf.Sqrt(deathRatio);
+
+        kpHover.text = "Kill participation: " + ((int)(kaRatio * 100)).ToString() + "%";
+        this.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 
         killRatio *= 0.7f;
         killRatio += 0.3f;
@@ -78,7 +85,7 @@ public class MatchLabel : MonoBehaviour
 
         DateTime creation = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         creation = creation.AddMilliseconds(creationTime).ToLocalTime();
-        gameCreation.text = creation.Day.ToString() + "." + creation.Month.ToString() + "." + (creation.Year % 1000).ToString() + " " + creation.Hour.ToString() + ":" + creation.Minute.ToString();
+        gameCreation.text = creation.Day.ToString() + "." + creation.Month.ToString("00") + "." + (creation.Year % 1000).ToString() + " " + creation.Hour.ToString() + ":" + creation.Minute.ToString();
     }
     public void SetPosition(string pos)
     {

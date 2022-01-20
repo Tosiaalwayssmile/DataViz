@@ -37,6 +37,7 @@ public class MainManager : MonoBehaviour
     [Header("Match History")]
     public Transform viewport;
     public GameObject matchLabelPrefab;
+    public int numberOfMatches;
 
 
     SummonerDTO player;
@@ -78,8 +79,7 @@ public class MainManager : MonoBehaviour
     }
     void LoadMatchHistory()
     {
-        int matchAmount = 5;
-        matchInfos = RiotApi.GetMatches(matchAmount);
+        matchInfos = RiotApi.GetMatches(numberOfMatches);
 
         int topAmount = 0;
         int jglAmount = 0;
@@ -141,6 +141,8 @@ public class MainManager : MonoBehaviour
                 champGamesAmount.Add(info.championId, 1);
         }
 
+
+        var maestry = RiotApi.GetChampsMasteryInfo();
         foreach (var info in matchInfos)
         {
             var label = Instantiate(matchLabelPrefab).GetComponent<MatchLabel>();
@@ -149,7 +151,17 @@ public class MainManager : MonoBehaviour
             label.transform.localScale = Vector3.one;
             label.transform.localPosition = Vector3.zero;
 
-            label.SetChampPortrait(champSprites[info.championId], (float)champGamesAmount[info.championId] / matchInfos.Length);
+
+            int maestryLvl = 0;
+            foreach (var dto in from dto in maestry
+                                where dto.championId.Equals(info.championId)
+                                select dto)
+            {
+                maestryLvl = dto.championLevel;
+                break;
+            }
+
+            label.SetChampPortrait(champSprites[info.championId], maestryLvl);
             label.WinLoseGamemode(info.win, info.gameMode);
             label.SetSummonerSpells(info.summoner1Id, info.summoner2Id);
 
@@ -267,10 +279,10 @@ public class MainManager : MonoBehaviour
         else if (top2 == utilAmount && utilAmount != 0 && !suppBig)
             supImg.transform.localScale = bigImgScale;
 
-        float winrate = (float)won / matchAmount;
+        float winrate = (float)won / numberOfMatches;
         winrate += 0.1f;
         if (winrate < 0.5f)
             winrate = 1 - winrate;
-        wrImg.fillAmount = (float)won / matchAmount;
+        wrImg.fillAmount = (float)won / numberOfMatches;
     }
 }

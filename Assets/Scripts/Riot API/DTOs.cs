@@ -13,6 +13,7 @@ public class ChampionMasteryDTO : DTO
     public long championId { get; set; }
     public long lastPlayTime { get; set; }
     public int championPoints { get; set; }
+    public int championLevel { get; set; }
 }
 
 public class SummonerDTO : DTO
