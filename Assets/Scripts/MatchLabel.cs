@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MatchLabel : MonoBehaviour
+public class MatchLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Image proficiencyBar;
     public Image champIcon;
@@ -21,15 +22,20 @@ public class MatchLabel : MonoBehaviour
     public Text deathsCount;
     public Text assistsCount;
     public Text kpHover;
+    public Text deathsHover;
+    public Text champHover;
+    public GameObject glow;
 
     Map.mapMethod onEnter;
     Map.mapMethod onExit;
 
 
-    public void SetChampPortrait(Sprite champ, int maestryLevel)
+    public void SetChampPortrait(Sprite champ, int maestryLevel, string champName)
     {
         champIcon.sprite = champ;
         proficiencyBar.fillAmount = maestryLevel / 7f;
+
+        champHover.text = champName + "\nMaestry Lvl: " + maestryLevel;
     }
     public void WinLoseGamemode(bool win, string gameMode)
     {
@@ -56,7 +62,7 @@ public class MatchLabel : MonoBehaviour
         deathRatio = Mathf.Sqrt(deathRatio);
 
         kpHover.text = "Kill participation: " + ((int)(kaRatio * 100)).ToString() + "%";
-        this.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        deathsHover.text = ((int)(deathRatio * 100)).ToString() + "% of team's deaths";
 
         killRatio *= 0.7f;
         killRatio += 0.3f;
@@ -100,13 +106,25 @@ public class MatchLabel : MonoBehaviour
         onExit += Map.SetDef;
     }
 
-    public void OnMouseEnter()
-    {
-        onEnter?.Invoke();
-    }
+    //public void OnMouseEnter()
+    //{
+        
+    //}
 
-    public void OnMouseExit()
+    //public void OnMouseExit()
+    //{
+        
+    //}
+
+    public void OnPointerExit(PointerEventData eventData)
     {
         onExit?.Invoke();
+        glow.SetActive(false);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        onEnter?.Invoke();
+        glow.SetActive(true);
     }
 }

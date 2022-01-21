@@ -58,6 +58,18 @@ public class MainManager : MonoBehaviour
         LoadMatchHistory();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+    }
+
     void LoadPlayer()
     {
         string ign = "TosiaAlwaysSmile";
@@ -161,7 +173,17 @@ public class MainManager : MonoBehaviour
                 break;
             }
 
-            label.SetChampPortrait(champSprites[info.championId], maestryLvl);
+
+            string champName = string.Empty;
+            foreach (var champ in from champ in champions
+                                  where champ.id.Equals(info.championId)
+                                  select champ)
+            {
+                champName = champ.name;
+                break;
+            }
+
+            label.SetChampPortrait(champSprites[info.championId], maestryLvl, champName);
             label.WinLoseGamemode(info.win, info.gameMode);
             label.SetSummonerSpells(info.summoner1Id, info.summoner2Id);
 
